@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ResNet training in Torch
 ============================
 
@@ -60,3 +61,10 @@ This implementation differs from the ResNet paper in a few ways:
 **Weight decay**: We apply weight decay to all weights and biases instead of just the weights of the convolution layers.
 
 **Strided convolution**: When using the bottleneck architecture, we use stride 2 in the 3x3 convolution, instead of the first 1x1 convolution.
+=======
+# feedback_net
+The repo of Feedback Networks
+http://feedbacknet.stanford.edu/ .
+
+Feedback Networks Amir R. Zamir*,Te-Lin Wu*, Lin Sun, William B. Shen, Jitendra Malik, Silvio Savarese 
+>>>>>>> 732f239d6e371f30b62f2a6f5759accd46f85387
