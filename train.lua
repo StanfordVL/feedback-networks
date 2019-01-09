@@ -136,7 +136,7 @@ function Trainer:train(epoch, dataloader)
       print((' | Epoch: [%d][%d/%d]    Time %.3f  Data %.3f  LR %.0e  Err %1.4f  top1 %7.3f  top5 %7.3f'):format(
          epoch, n, trainSize, timer:time().real, dataTime, self.optimState.learningRate, loss, top1, top5))
 
-      -- check that the storage didn't get changed do to an unfortunate getParameters call
+      -- check that the storage didn't get changed due to an unfortunate getParameters call
       assert(self.params:storage() == self.model:parameters()[1]:storage())
 
       timer:reset()
@@ -280,11 +280,13 @@ function Trainer:learningRate(epoch)
       decay = epoch >= 122 and 2 or epoch >= 81 and 1 or 0
    elseif self.opt.dataset == 'cifar100' then
       -- decay = epoch >= 62 and 2 or epoch >= 21 and 1 or 0
-      -- decay = epoch >= 122 and 2 or epoch >= 81 and 1 or 0
-      decay = epoch >= 192 and 2 or epoch >= 191 and 1 or 0
+      decay = epoch >= 122 and 2 or epoch >= 81 and 1 or 0
+      -- decay = epoch >= 192 and 2 or epoch >= 191 and 1 or 0
    end
    return self.opt.LR * math.pow(0.1, decay)
    -- return self.opt.LR * math.pow(0.5, decay)
 end
 
 return M.Trainer
+
+

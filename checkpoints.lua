@@ -46,23 +46,21 @@ function checkpoint.save(epoch, model, optimState, isBestModel, opt)
    if torch.type(model) == 'nn.DataParallelTable' then
       model = model:get(1)
    end
-
    -- create a clean copy on the CPU without modifying the original network
-   model = deepCopy(model):float():clearState()
-
+   -- model = deepCopy(model):float():clearState()
+   model = model:clearState()
    local modelFile = 'model_' .. epoch .. '.t7'
    local optimFile = 'optimState_' .. epoch .. '.t7'
-
-   -- clear previous epoch's saved file
-   if epoch ~= 1 then
-      local prev = epoch - 1
+   -- clear previous epoch's save file
+   if epoch > 2 then
+      local prev = epoch - 2
       local prev_model = 'model_' .. prev .. '.t7'
       local prev_optim = 'optimState_' .. prev .. '.t7'
       os.remove(paths.concat(opt.save, prev_model))
       os.remove(paths.concat(opt.save, prev_optim))
    end
-   torch.save(paths.concat(opt.save, modelFile), model)
    torch.save(paths.concat(opt.save, optimFile), optimState)
+   torch.save(paths.concat(opt.save, modelFile), model)
    torch.save(paths.concat(opt.save, 'latest.t7'), {
       epoch = epoch,
       modelFile = modelFile,

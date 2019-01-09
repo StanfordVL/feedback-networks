@@ -1,70 +1,66 @@
-<<<<<<< HEAD
-ResNet training in Torch
+
+
+
+# Feedback Networks http://feedbacknet.stanford.edu/ 
+
+Paper: Feedback Networks, CVPR 2017.
+
+Amir R. Zamir*,Te-Lin Wu*, Lin Sun, William B. Shen, Bertram E. Shi, Jitendra Malik, Silvio Savarese. 
+
+## Feedback Networks training in Torch
 ============================
 
-This implements training of residual networks from [Deep Residual Learning for Image Recognition](http://arxiv.org/abs/1512.03385) by Kaiming He, et. al.
-
-[We wrote a more verbose blog post discussing this code, and ResNets in general here.](http://torch.ch/blog/2016/02/04/resnets.html)
-
-
 ## Requirements
+Code adopted and modified from [fb.resnet.torch](https://github.com/facebook/fb.resnet.torch).
 See the [installation instructions](INSTALL.md) for a step-by-step guide.
 - Install [Torch](http://torch.ch/docs/getting-started.html) on a machine with CUDA GPU
 - Install [cuDNN v4 or v5](https://developer.nvidia.com/cudnn) and the Torch [cuDNN bindings](https://github.com/soumith/cudnn.torch/tree/R4)
-- Download the [ImageNet](http://image-net.org/download-images) dataset and [move validation images](https://github.com/facebook/fb.resnet.torch/blob/master/INSTALL.md#download-the-imagenet-dataset) to labeled subfolders
+- Install [rnn](https://github.com/Element-Research/rnn) the Element-Research RNN library for Torch
+- Download the [CIFAR10/100](https://www.cs.toronto.edu/~kriz/cifar.html) dataset (binary file) and put it under folder gen/
 
 If you already have Torch installed, update `nn`, `cunn`, and `cudnn`.
 
 ## Training
-See the [training recipes](TRAINING.md) for addition examples.
 
 The training scripts come with several options, which can be listed with the `--help` flag.
 ```bash
 th main.lua --help
 ```
 
-To run the training, simply run main.lua. By default, the script runs ResNet-34 on ImageNet with 1 GPU and 2 data-loader threads.
+To run the training, see the example run.sh, explanations below:
 ```bash
-th main.lua -data [imagenet-folder with train and val folders]
+th main.lua -seqLength [number of feedback iterations] -sequenceOut [true for feedback false for recurrence inference] -nGPU [number of GPU]
+-depth [20 to bypass] -batchSize [batch size] -dataset [cifar100] -nEpochs [number of epochs to train]
+-netType [the model under models/ directory] -save [checkpoints directory to save the model] -resume [checkpoints directory to restore the model]
 ```
 
-To train ResNet-50 on 4 GPUs:
+## Testing
+
+To run the testing, simply assign a directory of where the checkpoints are saved and turn of the testOnly flag and specify the model path as follows:
 ```bash
-th main.lua -depth 50 -batchSize 256 -nGPU 4 -nThreads 8 -shareGradInput true -data [imagenet-folder]
+-testOnly 'true' -resume [checkpoints directory to restore the model]
 ```
 
-## Trained models
+## Using your own criterion
 
-Trained ResNet 18, 34, 50, 101, 152, and 200 models are [available for download](pretrained). We include instructions for [using a custom dataset](pretrained/README.md#fine-tuning-on-a-custom-dataset), [classifying an image and getting the model's top5 predictions](pretrained/README.md#classification), and for [extracting image features](pretrained/README.md#extracting-image-features) using a pre-trained model.
+You can write your own criterion and store it under the directory lib/, and require them in the models/init.lua
+Add another options in the opts.lua to use them while running a script, for example
+```lua
+cmd:option('-coarsefine', 'false', 'If using this criterion or not')
+opt.coarsefine = opt.coarsefine ~= 'false'
+```
+In the bash script add
+```bash
+-coarsefine 'true'
+```
 
-The trained models achieve better error rates than the [original ResNet models](https://github.com/KaimingHe/deep-residual-networks).
+## Writing your own model
 
-#### Single-crop (224x224) validation error rate
+You can develop your own model and store in under models/, as an exmaple model of ours, models/feedback_48.lua
+Modify the code below the following lines within the code block, and set the netType in your running bash script or command
+to the name of the model you develop:
+```lua
+elseif opt.dataset == 'cifar100' then
+   -- Model type specifies number of layers for CIFAR-100 model
+```
 
-| Network       | Top-1 error | Top-5 error |
-| ------------- | ----------- | ----------- |
-| ResNet-18     | 30.43       | 10.76       |
-| ResNet-34     | 26.73       | 8.74        |
-| ResNet-50     | 24.01       | 7.02        |
-| ResNet-101    | 22.44       | 6.21        |
-| ResNet-152    | 22.16       | 6.16        |
-| ResNet-200    | 21.66       | 5.79        |
-
-## Notes
-
-This implementation differs from the ResNet paper in a few ways:
-
-**Scale augmentation**: We use the [scale and aspect ratio augmentation](datasets/transforms.lua#L130) from [Going Deeper with Convolutions](http://arxiv.org/abs/1409.4842), instead of [scale augmentation](datasets/transforms.lua#L113) used in the ResNet paper. We find this gives a better validation error.
-
-**Color augmentation**: We use the photometric distortions from [Andrew Howard](http://arxiv.org/abs/1312.5402) in addition to the [AlexNet](http://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf)-style color augmentation used in the ResNet paper.
-
-**Weight decay**: We apply weight decay to all weights and biases instead of just the weights of the convolution layers.
-
-**Strided convolution**: When using the bottleneck architecture, we use stride 2 in the 3x3 convolution, instead of the first 1x1 convolution.
-=======
-# feedback_net
-The repo of Feedback Networks
-http://feedbacknet.stanford.edu/ .
-
-Feedback Networks Amir R. Zamir*,Te-Lin Wu*, Lin Sun, William B. Shen, Jitendra Malik, Silvio Savarese 
->>>>>>> 732f239d6e371f30b62f2a6f5759accd46f85387

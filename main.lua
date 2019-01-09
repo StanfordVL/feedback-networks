@@ -46,6 +46,17 @@ local startEpoch = checkpoint and checkpoint.epoch + 1 or opt.epochNumber
 local bestTop1 = math.huge
 local bestTop5 = math.huge
 for epoch = startEpoch, opt.nEpochs do
+
+   if epoch == 20 or epoch == '20' then
+      -- local modelPath = paths.concat(opt.save, checkpoints.modelFile)
+      --
+      -- local modelPath = paths.concat(opt.save, 'model_' .. epoch-1 ..'.t7')
+      -- assert(paths.filep(modelPath), 'Saved model not found: ' .. modelPath)
+      -- print('=> Resuming model from ' .. modelPath)
+      -- trainer.model = torch.load(modelPath):cuda()
+      -- trainer.params, trainer.gradParams = trainer.model:getParameters()
+   end
+
    -- Train for a single epoch
    local trainTop1, trainTop5, trainLoss = trainer:train(epoch, trainLoader)
 
@@ -61,6 +72,8 @@ for epoch = startEpoch, opt.nEpochs do
    end
 
    checkpoints.save(epoch, model, trainer.optimState, bestModel, opt)
+
 end
 
 print(string.format(' * Finished top1: %6.3f  top5: %6.3f', bestTop1, bestTop5))
+

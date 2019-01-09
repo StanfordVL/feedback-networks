@@ -32,6 +32,15 @@ function M.parse(arg)
    cmd:option('-testOnly',        'false', 'Run on validation set only')
    cmd:option('-tenCrop',         'false', 'Ten-crop testing')
    cmd:option('-sequenceOut',     'false', 'sequence loss or not')
+   cmd:option('-coarsefine',      'false', 'If using this criterion or not')
+   cmd:option('-coarsefine2',      'false', 'If using this criterion or not')
+   cmd:option('-coarsefine3',      'false', 'If using this criterion or not')
+   cmd:option('-coarsefine4',      'false', 'If using this criterion or not')
+   cmd:option('-coarsefine5',      'false', 'If using this criterion or not')
+   cmd:option('-coarsefine6',      'false', 'If using this criterion or not')
+   cmd:option('-decayfine',      'false', 'If using this criterion or not')
+   cmd:option('-decayfine2',      'false', 'If using this criterion or not')
+   cmd:option('-decayfine3',      'false', 'If using this criterion or not')
    ------------- Checkpointing options ---------------
    cmd:option('-save',            'checkpoints', 'Directory in which to save checkpoints')
    cmd:option('-resume',          'none',        'Resume from the latest checkpoint in this directory')
@@ -63,6 +72,15 @@ function M.parse(arg)
    opt.optnet = opt.optnet ~= 'false'
    opt.resetClassifier = opt.resetClassifier ~= 'false'
    opt.sequenceOut = opt.sequenceOut ~= 'false'
+   opt.coarsefine = opt.coarsefine ~= 'false'
+   opt.coarsefine2 = opt.coarsefine2 ~= 'false'
+   opt.coarsefine3 = opt.coarsefine3 ~= 'false'
+   opt.coarsefine4 = opt.coarsefine4 ~= 'false'
+   opt.coarsefine5 = opt.coarsefine5 ~= 'false'
+   opt.coarsefine6 = opt.coarsefine6 ~= 'false'
+   opt.decayfine = opt.decayfine ~= 'false'
+   opt.decayfine2 = opt.decayfine2 ~= 'false'
+   opt.decayfine3 = opt.decayfine3 ~= 'false'
 
    if not paths.dirp(opt.save) and not paths.mkdir(opt.save) then
       cmd:error('error: unable to create checkpoint directory: ' .. opt.save .. '\n')
